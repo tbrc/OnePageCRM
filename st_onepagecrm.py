@@ -14,6 +14,15 @@ from google.auth.transport.requests import Request
 
 SCOPES = ["https://www.googleapis.com/auth/gmail.modify"]
 
+# Write credentials.json and token.json from environment variables if present
+if "GOOGLE_CREDS" in os.environ:
+    with open("credentials.json", "w") as f:
+        f.write(os.environ["GOOGLE_CREDS"])
+
+if "GOOGLE_TOKEN" in os.environ:
+    with open("token.json", "w") as f:
+        f.write(os.environ["GOOGLE_TOKEN"])
+
 # --- Gmail Setup ---
 def get_gmail_service():
     creds = None
@@ -136,9 +145,9 @@ def scheduler_loop(endpoint_user_id, api_key, owner_id, last_run_placeholder, re
 def main():
     st.title("📬 Gmail → OnePageCRM Automation")
 
-    ENDPOINT_USER_ID = "5e280c5110907075c501f607"
-    API_KEY = "xpeZuEDANwDx38WbD4On6SuEWBbPcwpetlkDaffsSrE="
-    OWNER_ID = "5e280c5110907075c501f607"
+    ENDPOINT_USER_ID = os.environ.get("ONEPAGECRM_USER_ID")
+    API_KEY = os.environ.get("ONEPAGECRM_API_KEY")
+    OWNER_ID = os.environ.get("ONEPAGECRM_OWNER_ID")
 
     last_run_placeholder = st.empty()
     recent_contacts_placeholder = st.empty()
@@ -161,3 +170,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
