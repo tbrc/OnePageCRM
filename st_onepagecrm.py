@@ -12,6 +12,36 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
 
+# --- Country Mapping ---
+# --- ISO 3166-1 Alpha-2 Country Codes ---
+COUNTRY_MAP = {
+    "Afghanistan": "AF", "Albania": "AL", "Algeria": "DZ", "Andorra": "AD", "Angola": "AO",
+    "Argentina": "AR", "Armenia": "AM", "Australia": "AU", "Austria": "AT", "Azerbaijan": "AZ",
+    "Bahamas": "BS", "Bahrain": "BH", "Bangladesh": "BD", "Belgium": "BE", "Belize": "BZ",
+    "Benin": "BJ", "Bhutan": "BT", "Bolivia": "BO", "Bosnia and Herzegovina": "BA", "Botswana": "BW",
+    "Brazil": "BR", "Brunei": "BN", "Bulgaria": "BG", "Burkina Faso": "BF", "Burundi": "BI",
+    "Cambodia": "KH", "Cameroon": "CM", "Canada": "CA", "Chile": "CL", "China": "CN",
+    "Colombia": "CO", "Costa Rica": "CR", "Croatia": "HR", "Cuba": "CU", "Cyprus": "CY",
+    "Czech Republic": "CZ", "Denmark": "DK", "Dominican Republic": "DO", "Ecuador": "EC", "Egypt": "EG",
+    "El Salvador": "SV", "Estonia": "EE", "Ethiopia": "ET", "Finland": "FI", "France": "FR",
+    "Germany": "DE", "Greece": "GR", "Guatemala": "GT", "Honduras": "HN", "Hong Kong": "HK",
+    "Hungary": "HU", "Iceland": "IS", "India": "IN", "Indonesia": "ID", "Iran": "IR",
+    "Iraq": "IQ", "Ireland": "IE", "Israel": "IL", "Italy": "IT", "Jamaica": "JM",
+    "Japan": "JP", "Jordan": "JO", "Kazakhstan": "KZ", "Kenya": "KE", "Kuwait": "KW",
+    "Latvia": "LV", "Lebanon": "LB", "Lithuania": "LT", "Luxembourg": "LU", "Malaysia": "MY",
+    "Maldives": "MV", "Malta": "MT", "Mexico": "MX", "Monaco": "MC", "Mongolia": "MN",
+    "Morocco": "MA", "Myanmar": "MM", "Nepal": "NP", "Netherlands": "NL", "New Zealand": "NZ",
+    "Nigeria": "NG", "North Korea": "KP", "Norway": "NO", "Oman": "OM", "Pakistan": "PK",
+    "Panama": "PA", "Paraguay": "PY", "Peru": "PE", "Philippines": "PH", "Poland": "PL",
+    "Portugal": "PT", "Qatar": "QA", "Romania": "RO", "Russia": "RU", "Saudi Arabia": "SA",
+    "Serbia": "RS", "Singapore": "SG", "Slovakia": "SK", "Slovenia": "SI", "South Africa": "ZA",
+    "South Korea": "KR", "Spain": "ES", "Sri Lanka": "LK", "Sweden": "SE", "Switzerland": "CH",
+    "Taiwan": "TW", "Thailand": "TH", "Turkey": "TR", "Ukraine": "UA", "United Arab Emirates": "AE",
+    "United Kingdom": "GB", "United States": "US", "Uruguay": "UY", "Uzbekistan": "UZ", "Venezuela": "VE",
+    "Vietnam": "VN", "Zambia": "ZM", "Zimbabwe": "ZW"
+}
+
+
 SCOPES = ["https://www.googleapis.com/auth/gmail.modify"]
 
 # Write credentials.json and token.json from environment variables if present
@@ -79,7 +109,7 @@ def fetch_unread_inbound(service):
             "Name": fields.get("Name", ""),
             "Email ID": fields.get("Email ID", ""),
             "Company Name": fields.get("Company Name", ""),
-            "CountryCode": fields.get("Country", ""),  # must be ISO code
+            "CountryCode": COUNTRY_MAP.get(fields.get("Country", ""), fields.get("Country", "")),
             "Phone No": fields.get("Phone No", "")
         }
         structured_list.append(structured)
@@ -101,20 +131,20 @@ def push_to_onepagecrm(fields, endpoint_user_id, api_key, owner_id):
         "company_name": fields.get("Company Name", ""),
         "emails": [{"type": "work", "value": fields.get("Email ID", "")}],
         "phones": [{"type": "work", "value": fields.get("Phone No", "")}],
-        "tags": [fields.get("Country", "")],
+        #"tags": [fields.get("Country", "")],
         "visibility": "private",
         "owner_id": owner_id,
         "background": fields.get("Report Name", ""),
-        # "address_list": [
-        #     {
-        #         "address": "",
-        #         "city": "",
-        #         "state": "",
-        #         "zip_code": "",
-        #         "country_code": fields.get("CountryCode", ""),
-        #         "type": "work"
-        #     }
-        # ]
+        "address_list": [
+         {
+                "address": "",
+                "city": "",
+                "state": "",
+                "zip_code": "",
+                "country_code": fields.get("CountryCode", ""),
+                "type": "work"
+         }
+        ]
     }
     response = requests.post(api_url, json=payload, auth=HTTPBasicAuth(endpoint_user_id, api_key))
     return response.status_code, response.text
@@ -170,4 +200,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
