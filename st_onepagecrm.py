@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
+import re
 
 # --- Country Mapping ---
 # --- ISO 3166-1 Alpha-2 Country Codes ---
@@ -38,7 +39,7 @@ COUNTRY_MAP = {
     "South Korea": "KR", "Spain": "ES", "Sri Lanka": "LK", "Sweden": "SE", "Switzerland": "CH",
     "Taiwan": "TW", "Thailand": "TH", "Turkey": "TR", "Ukraine": "UA", "United Arab Emirates": "AE",
     "United Kingdom": "GB", "United States": "US", "Uruguay": "UY", "Uzbekistan": "UZ", "Venezuela": "VE",
-    "Vietnam": "VN", "Zambia": "ZM", "Zimbabwe": "ZW"
+    "Vietnam": "VN", "Zambia": "ZM", "Zimbabwe": "ZW", "Korea, North": "KP", "Korea, South": "KR"
 }
 
 
@@ -122,6 +123,35 @@ def fetch_unread_inbound(service):
         ).execute()
     return structured_list
 
+def is_valid_email(email: str) -> bool:
+    """Check if email is syntactically valid."""
+    pattern = r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
+    return re.match(pattern, email) is not None
+
+def is_junk_email(email: str) -> bool:
+    """Detect junk emails by heuristics."""
+    if not email:
+        return True
+    
+    local, _, domain = email.partition("@")
+    local = local.strip()
+    domain = domain.lower().strip()
+
+    # Rule 1: numeric-heavy local part (junk)
+    if local.isdigit() or sum(c.isdigit() for c in local) > len(local) * 0.7:
+        return True
+
+    # Rule 2: disposable domains (expandable list)
+    disposable_domains = {"qq.com", "163.com", "mailinator.com", "tempmail.com"}
+    if domain in disposable_domains:
+        return True
+
+    # Rule 3: suspiciously short domain
+    if len(domain.split(".")) < 2:
+        return True
+
+    return False
+
 # --- OnePageCRM Push Function ---
 def push_to_onepagecrm(fields, endpoint_user_id, api_key, owner_id):
     api_url = "https://app.onepagecrm.com/api/v3/contacts"
@@ -154,14 +184,25 @@ def run_workflow(endpoint_user_id, api_key, owner_id, last_run_placeholder, rece
     service = get_gmail_service()
     mails = fetch_unread_inbound(service)
     results = []
+    
     for fields in mails:
+        email = fields.get("Email ID", "")
+        
+        # Skip invalid or junk emails
+        if not is_valid_email(email) or is_junk_email(email):
+            print(f"⏭️ Skipping junk/invalid email: {email}")
+            continue
+        
         status, text = push_to_onepagecrm(fields, endpoint_user_id, api_key, owner_id)
-        results.append((fields, status))
+        results.append((fields, status, text))
     
     # Update UI placeholders
     if results:
-        last_run_placeholder.markdown(f"✅ Auto run completed at {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        last_run_placeholder.markdown(
+            f"✅ Auto run completed at {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        )
         recent_contacts_placeholder.write(results)
+    
     return results
 
 # --- Background Scheduler ---
@@ -200,5 +241,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
