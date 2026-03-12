@@ -29,7 +29,7 @@ COUNTRY_MAP = {
     "Hungary": "HU", "Iceland": "IS", "India": "IN", "Indonesia": "ID", "Iran": "IR",
     "Iraq": "IQ", "Ireland": "IE", "Israel": "IL", "Italy": "IT", "Jamaica": "JM",
     "Japan": "JP", "Jordan": "JO", "Kazakhstan": "KZ", "Kenya": "KE", "Kuwait": "KW",
-    "Latvia": "LV", "Lebanon": "LB", "Lithuania": "LT", "Luxembourg": "LU", "Malaysia": "MY",
+    "Latvia": "LV", "Lebanon": "LB", "Lithuania": "LT", "Luxembourg": "LU", "Madagascar": "MG", "Malaysia": "MY",
     "Maldives": "MV", "Malta": "MT", "Mexico": "MX", "Monaco": "MC", "Mongolia": "MN",
     "Morocco": "MA", "Myanmar": "MM", "Nepal": "NP", "Netherlands": "NL", "New Zealand": "NZ",
     "Nigeria": "NG", "North Korea": "KP", "Norway": "NO", "Oman": "OM", "Pakistan": "PK",
@@ -241,6 +241,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
