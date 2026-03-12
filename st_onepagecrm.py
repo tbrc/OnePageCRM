@@ -38,7 +38,7 @@ COUNTRY_MAP = {
     "Serbia": "RS", "Singapore": "SG", "Slovakia": "SK", "Slovenia": "SI", "South Africa": "ZA",
     "South Korea": "KR", "Spain": "ES", "Sri Lanka": "LK", "Sweden": "SE", "Switzerland": "CH",
     "Taiwan": "TW", "Thailand": "TH", "Turkey": "TR", "Ukraine": "UA", "United Arab Emirates": "AE",
-    "United Kingdom": "GB", "United States": "US", "Uruguay": "UY", "Uzbekistan": "UZ", "Venezuela": "VE",
+    "United Kingdom": "GB", "United States": "US", "United States of America": "US", "Uruguay": "UY", "Uzbekistan": "UZ", "Venezuela": "VE",
     "Vietnam": "VN", "Zambia": "ZM", "Zimbabwe": "ZW", "Korea, North": "KP", "Korea, South": "KR"
 }
 
@@ -241,6 +241,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
