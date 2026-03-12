@@ -104,11 +104,13 @@ def fetch_unread_inbound(service):
         full_msg = service.users().messages().get(userId="me", id=msg["id"]).execute()
         body_html = extract_body(full_msg["payload"])
         fields = parse_html_body(body_html)
+
+        email_value = fields.get("Email ID", "") or fields.get("Email", "")
         
         structured = {
             "Report Name": fields.get("Report Name", ""),
             "Name": fields.get("Name", ""),
-            "Email ID": fields.get("Email ID", ""),
+            "Email ID": email_value,
             "Company Name": fields.get("Company Name", ""),
             "CountryCode": COUNTRY_MAP.get(fields.get("Country", ""), fields.get("Country", "")),
             "Phone No": fields.get("Phone No", "")
@@ -241,6 +243,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
