@@ -227,7 +227,7 @@ def main():
 
     if st.button("Manual Push"):
         results = run_workflow(ENDPOINT_USER_ID, API_KEY, OWNER_ID, last_run_placeholder, recent_contacts_placeholder)
-        for fields, status in results:
+        for fields, status, text in results:
             st.write("Contact:", fields)
             st.write("Status:", status)
             st.write("Response:", text)
@@ -243,6 +243,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
