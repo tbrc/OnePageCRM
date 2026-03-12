@@ -196,7 +196,7 @@ def run_workflow(endpoint_user_id, api_key, owner_id, last_run_placeholder, rece
             continue
         
         status, text = push_to_onepagecrm(fields, endpoint_user_id, api_key, owner_id)
-        results.append((fields, status))
+        results.append((fields, status, text))
     
     # Update UI placeholders
     if results:
@@ -230,7 +230,7 @@ def main():
         for fields, status in results:
             st.write("Contact:", fields)
             st.write("Status:", status)
-            #st.write("Response:", text)
+            st.write("Response:", text)
 
     st.write("⏱️ This app auto-runs every hour in the background.")
 
@@ -243,6 +243,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
