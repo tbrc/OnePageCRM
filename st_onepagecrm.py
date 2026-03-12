@@ -196,7 +196,7 @@ def run_workflow(endpoint_user_id, api_key, owner_id, last_run_placeholder, rece
             continue
         
         status, text = push_to_onepagecrm(fields, endpoint_user_id, api_key, owner_id)
-        results.append((fields, status, text))
+        results.append((fields, status))
     
     # Update UI placeholders
     if results:
@@ -243,6 +243,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
