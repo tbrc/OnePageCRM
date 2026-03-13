@@ -27,7 +27,7 @@ COUNTRY_MAP = {
 "North Macedonia":"MK", "Northern Mariana Islands":"MP", "Norway":"NO", "Oman":"OM", "Pakistan":"PK", "Palau":"PW", "Palestinian Territories":"PS", "Panama":"PA", "Papua New Guinea":"PG", "Paraguay":"PY", "Peru":"PE", "Philippines":"PH", "Pitcairn":"PN", "Poland":"PL", "Portugal":"PT", "Puerto Rico":"PR", "Qatar":"QA", "Réunion":"RE", "Romania":"RO", "Russia":"RU", "Rwanda":"RW",
 "Saint Barthélemy":"BL", "Saint Helena, Ascension and Tristan da Cunha":"SH", "Saint Kitts and Nevis":"KN", "Saint Lucia":"LC", "Saint Martin":"MF", "Saint Pierre and Miquelon":"PM", "Saint Vincent and the Grenadines":"VC", "Samoa":"WS", "San Marino":"SM", "Sao Tome and Principe":"ST", "Saudi Arabia":"SA", "Senegal":"SN", "Serbia":"RS", "Seychelles":"SC", "Sierra Leone":"SL", "Singapore":"SG", "Sint Maarten":"SX", "Slovakia":"SK", "Slovenia":"SI", "Solomon Islands":"SB", "Somalia":"SO",
 "South Africa":"ZA", "South Georgia and the South Sandwich Islands":"GS", "South Sudan":"SS", "Spain":"ES", "Spain (Canary Islands)":"IC", "Sri Lanka":"LK", "Sudan":"SD", "Suriname":"SR", "Svalbard and Jan Mayen":"SJ", "Sweden":"SE", "Syria":"SY", "Taiwan":"TW", "Tajikistan":"TJ", "Tanzania":"TZ", "Thailand":"TH", "Timor-Leste":"TL", "Togo":"TG", "Tokelau":"TK", "Tonga":"TO", "Trinidad and Tobago":"TT",
-"Tunisia":"TN", "Türkiye":"TR", "Turkmenistan":"TM", "Turks and Caicos Islands":"TC", "Tuvalu":"TV", "Uganda":"UG", "Ukraine":"UA", "United Arab Emirates":"AE", "United Kingdom":"GB", "United States":"US", "United States Minor Outlying Islands":"UM", "Uruguay":"UY", "Uzbekistan":"UZ", "Vanuatu":"VU", "Vatican City":"VA", "Venezuela":"VE", "Vietnam":"VN", "Virgin Islands, British":"VG", "Virgin Islands, U.S.":"VI", "Wallis and Futuna":"WF", "Western Sahara":"EH", "Yemen":"YE", "Zambia":"ZM", "Zimbabwe":"ZW"
+"Tunisia":"TN", "Türkiye":"TR", "Turkmenistan":"TM", "Turks and Caicos Islands":"TC", "Tuvalu":"TV", "Uganda":"UG", "Ukraine":"UA", "United Arab Emirates":"AE", "United Kingdom":"GB", "United States":"US", "United States of America":"US", "United States Minor Outlying Islands":"UM", "Uruguay":"UY", "Uzbekistan":"UZ", "Vanuatu":"VU", "Vatican City":"VA", "Venezuela":"VE", "Vietnam":"VN", "Virgin Islands, British":"VG", "Virgin Islands, U.S.":"VI", "Wallis and Futuna":"WF", "Western Sahara":"EH", "Yemen":"YE", "Zambia":"ZM", "Zimbabwe":"ZW"
 }
 
 
@@ -234,6 +234,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
