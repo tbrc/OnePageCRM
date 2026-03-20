@@ -202,7 +202,7 @@ def run_workflow(endpoint_user_id, api_key, owner_id, last_run_placeholder, rece
 def scheduler_loop(endpoint_user_id, api_key, owner_id, last_run_placeholder, recent_contacts_placeholder):
     while True:
         run_workflow(endpoint_user_id, api_key, owner_id, last_run_placeholder, recent_contacts_placeholder)
-        time.sleep(60)  # check every 60 seconds
+        time.sleep(600)  # check every 600 seconds
 
 
 # --- Streamlit UI ---
@@ -223,7 +223,7 @@ def main():
             st.write("Status:", status)
             st.write("Response:", text)
 
-    st.write("⏱️ This app auto-runs every hour in the background.")
+    #st.write("⏱️ This app auto-runs every hour in the background.")
 
     # Start scheduler in background thread
     threading.Thread(
@@ -233,7 +233,13 @@ def main():
     ).start()
 
 if __name__ == "__main__":
-    main()
+    if os.environ.get("WORKER_MODE") == "true":
+        # Run only the scheduler loop (no Streamlit UI)
+        scheduler_loop(ENDPOINT_USER_ID, API_KEY, OWNER_ID, None, None)
+    else:
+        # Run Streamlit UI
+        main()
+
 
 
 
