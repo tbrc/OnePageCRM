@@ -12,6 +12,14 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
 import re
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[logging.StreamHandler()]
+)
+
 
 # --- Country Mapping ---
 # --- ISO 3166-1 Alpha-2 Country Codes ---
@@ -176,21 +184,24 @@ def push_to_onepagecrm(fields, endpoint_user_id, api_key, owner_id):
 def run_workflow(endpoint_user_id, api_key, owner_id, last_run_placeholder=None, recent_contacts_placeholder=None):
     service = get_gmail_service()
     mails = fetch_unread_inbound(service)
+
+    logging.info(f"Fetched {len(mails)} unread mails from Gmail")
+    
     results = []
     
     for fields in mails:
         email = fields.get("Email ID", "")
         
         if not is_valid_email(email) or is_junk_email(email):
-            print(f"⏭️ Skipping junk/invalid email: {email}")
+            #print(f"⏭️ Skipping junk/invalid email: {email}")
+            logging.warning(f"Skipping junk/invalid email: {email}")
             continue
         
         status, text = push_to_onepagecrm(fields, endpoint_user_id, api_key, owner_id)
-        if status != 201:
-            print(f"❌ Failed push: {fields['Email ID']} | Status: {status} | Response: {text}")
+        if status == 201:
+            logging.info(f"✅ Success: {fields['Email ID']}")
         else:
-            print(f"✅ Success: {fields['Email ID']}")
-
+            logging.error(f"❌ Failed push: {fields['Email ID']} | Status: {status} | Response: {text}")
         results.append((fields, status, text))
     
     if results:
@@ -214,6 +225,7 @@ def run_workflow(endpoint_user_id, api_key, owner_id, last_run_placeholder=None,
 # --- Background Scheduler ---
 def scheduler_loop(endpoint_user_id, api_key, owner_id, last_run_placeholder, recent_contacts_placeholder):
     while True:
+        logging.info("Scheduler loop triggered")
         run_workflow(endpoint_user_id, api_key, owner_id, last_run_placeholder, recent_contacts_placeholder)
         time.sleep(600)  # check every 600 seconds
 
