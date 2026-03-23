@@ -181,7 +181,6 @@ def run_workflow(endpoint_user_id, api_key, owner_id, last_run_placeholder=None,
     for fields in mails:
         email = fields.get("Email ID", "")
         
-        # Skip invalid or junk emails
         if not is_valid_email(email) or is_junk_email(email):
             print(f"⏭️ Skipping junk/invalid email: {email}")
             continue
@@ -189,7 +188,6 @@ def run_workflow(endpoint_user_id, api_key, owner_id, last_run_placeholder=None,
         status, text = push_to_onepagecrm(fields, endpoint_user_id, api_key, owner_id)
         results.append((fields, status, text))
     
-    # Update UI placeholders only if they exist
     if results:
         if last_run_placeholder is not None:
             last_run_placeholder.markdown(
@@ -197,6 +195,13 @@ def run_workflow(endpoint_user_id, api_key, owner_id, last_run_placeholder=None,
             )
         if recent_contacts_placeholder is not None:
             recent_contacts_placeholder.write(results)
+        else:
+            # Worker mode: log to console
+            print(f"✅ Auto run completed at {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+            for fields, status, text in results:
+                print("Contact:", fields)
+                print("Status:", status)
+                print("Response:", text)
     
     return results
 
