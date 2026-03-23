@@ -198,10 +198,11 @@ def run_workflow(endpoint_user_id, api_key, owner_id, last_run_placeholder=None,
             continue
         
         status, text = push_to_onepagecrm(fields, endpoint_user_id, api_key, owner_id)
+        # ✅ Detailed logging
         if status == 201:
-            logging.info(f"✅ Success: {fields['Email ID']}")
+            logging.info(f"✅ Success: {fields['Email ID']} | Fields: {fields} | Status: {status} | Response: {text}")
         else:
-            logging.error(f"❌ Failed push: {fields['Email ID']} | Status: {status} | Response: {text}")
+            logging.error(f"❌ Failed push: {fields['Email ID']} | Fields: {fields} | Status: {status} | Response: {text}")
         results.append((fields, status, text))
     
     if results:
