@@ -173,7 +173,7 @@ def push_to_onepagecrm(fields, endpoint_user_id, api_key, owner_id):
     return response.status_code, response.text
 
 # --- Workflow ---
-def run_workflow(endpoint_user_id, api_key, owner_id, last_run_placeholder, recent_contacts_placeholder):
+def run_workflow(endpoint_user_id, api_key, owner_id, last_run_placeholder=None, recent_contacts_placeholder=None):
     service = get_gmail_service()
     mails = fetch_unread_inbound(service)
     results = []
@@ -189,14 +189,17 @@ def run_workflow(endpoint_user_id, api_key, owner_id, last_run_placeholder, rece
         status, text = push_to_onepagecrm(fields, endpoint_user_id, api_key, owner_id)
         results.append((fields, status, text))
     
-    # Update UI placeholders
+    # Update UI placeholders only if they exist
     if results:
-        last_run_placeholder.markdown(
-            f"✅ Auto run completed at {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-        )
-        recent_contacts_placeholder.write(results)
+        if last_run_placeholder is not None:
+            last_run_placeholder.markdown(
+                f"✅ Auto run completed at {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+            )
+        if recent_contacts_placeholder is not None:
+            recent_contacts_placeholder.write(results)
     
     return results
+
 
 # --- Background Scheduler ---
 def scheduler_loop(endpoint_user_id, api_key, owner_id, last_run_placeholder, recent_contacts_placeholder):
