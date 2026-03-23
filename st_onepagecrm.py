@@ -234,11 +234,15 @@ def main():
 
 if __name__ == "__main__":
     if os.environ.get("WORKER_MODE") == "true":
-        # Run only the scheduler loop (no Streamlit UI)
+        # Define credentials here too
+        ENDPOINT_USER_ID = os.environ.get("ONEPAGECRM_USER_ID")
+        API_KEY = os.environ.get("ONEPAGECRM_API_KEY")
+        OWNER_ID = os.environ.get("ONEPAGECRM_OWNER_ID")
+
         scheduler_loop(ENDPOINT_USER_ID, API_KEY, OWNER_ID, None, None)
     else:
-        # Run Streamlit UI
         main()
+
 
 
 
