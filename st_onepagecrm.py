@@ -76,17 +76,32 @@ def extract_body(payload):
         return base64.urlsafe_b64decode(payload["body"]["data"]).decode("utf-8")
     return ""
 
+#def parse_html_body(html_text):
+#    soup = BeautifulSoup(html_text, "html.parser")
+#    fields = {}
+#    for p in soup.find_all("p"):
+#        bold = p.find("b")
+#        if bold:
+#            key = bold.get_text().replace(":", "").strip()
+#            bold.extract()
+#            value = p.get_text().strip()
+#            fields[key] = value
+#    return fields
+
 def parse_html_body(html_text):
     soup = BeautifulSoup(html_text, "html.parser")
     fields = {}
-    for p in soup.find_all("p"):
-        bold = p.find("b")
-        if bold:
-            key = bold.get_text().replace(":", "").strip()
-            bold.extract()
-            value = p.get_text().strip()
+
+    # Look for table rows
+    for row in soup.find_all("tr"):
+        cells = row.find_all("td")
+        if len(cells) >= 2:
+            key = cells[0].get_text(strip=True)
+            value = cells[1].get_text(strip=True)
             fields[key] = value
+
     return fields
+
 
 def fetch_unread_inbound(service):
     query = "label:INBOX is:unread from:inbound@tbrc.info"
