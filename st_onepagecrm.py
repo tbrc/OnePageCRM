@@ -117,14 +117,16 @@ def fetch_unread_inbound(service):
         fields = parse_html_body(body_html)
 
         email_value = fields.get("Email ID", "") or fields.get("Email", "")
+        phone_value = fields.get("Phone", "") or fields.get("Phone No", "")
+        report_value = fields.get("Reportname", "") or fields.get("Report Name", "")
         
         structured = {
-            "Report Name": fields.get("Report Name", ""),
+            "Report Name": report_value,
             "Name": fields.get("Name", ""),
             "Email ID": email_value,
             "Company Name": fields.get("Company Name", "") if fields.get("Company Name", "").strip() else "--",
             "CountryCode": COUNTRY_MAP.get(fields.get("Country", ""), fields.get("Country", "")),
-            "Phone No": fields.get("Phone No", "")
+            "Phone No": phone_value
         }
         structured_list.append(structured)
         
