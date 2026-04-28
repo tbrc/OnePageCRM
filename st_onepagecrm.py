@@ -210,7 +210,8 @@ def push_to_onepagecrm(fields, endpoint_user_id, api_key, owner_id):
         "visibility": "private",
         "owner_id": owner_id,
         "background": fields.get("Report Name", ""),
-        "request_type": fields.get("Request Type", ""),
+        #"request_type": fields.get("Request Type", ""),
+        "request_type": "Download Sample PDF",
         "address_list": [
          {
                 "address": "",
