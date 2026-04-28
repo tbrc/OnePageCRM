@@ -88,14 +88,36 @@ def extract_body(payload):
 #            fields[key] = value
 #    return fields
 
+#def parse_html_body(html_text):
+#    soup = BeautifulSoup(html_text, "html.parser")
+#    fields = {}
+
+#    # Extract the bold text above the table (first <b> tag)
+#    bold_tag = soup.find("b")
+#    if bold_tag:
+#        fields["Request Type"] = bold_tag.get_text(strip=True)
+
+#    # Look for table rows
+#    for row in soup.find_all("tr"):
+#        cells = row.find_all("td")
+#        if len(cells) >= 2:
+#            key = cells[0].get_text(strip=True)
+#           value = cells[1].get_text(strip=True)
+#            fields[key] = value
+
+#    return fields
+
 def parse_html_body(html_text):
     soup = BeautifulSoup(html_text, "html.parser")
     fields = {}
 
-    # Extract the bold text above the table (first <b> tag)
-    bold_tag = soup.find("b")
-    if bold_tag:
-        fields["Request Type"] = bold_tag.get_text(strip=True)
+    # Extract Request Type from <h2>
+    h2_tag = soup.find("h2")
+    if h2_tag:
+        h2_text = h2_tag.get_text(strip=True)
+        # Remove "New " at the start and " Received" at the end
+        cleaned = h2_text.replace("New ", "").replace(" Received", "").strip()
+        fields["Request Type"] = cleaned
 
     # Look for table rows
     for row in soup.find_all("tr"):
