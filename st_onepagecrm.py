@@ -211,7 +211,12 @@ def push_to_onepagecrm(fields, endpoint_user_id, api_key, owner_id):
         "owner_id": owner_id,
         "background": fields.get("Report Name", ""),
         #"request_type": fields.get("Request Type", ""),
-        "request_type": "Download Sample PDF",
+        "custom_fields": [
+            {
+                "custom_field": {"id": "69e8b534c677374bcfb55ddf"},  # Request Type field ID
+                "value": fields.get("Request Type", "")
+            }
+        ],
         "address_list": [
          {
                 "address": "",
