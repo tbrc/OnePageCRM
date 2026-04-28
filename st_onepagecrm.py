@@ -92,6 +92,11 @@ def parse_html_body(html_text):
     soup = BeautifulSoup(html_text, "html.parser")
     fields = {}
 
+    # Extract the bold text above the table (first <b> tag)
+    bold_tag = soup.find("b")
+    if bold_tag:
+        fields["Request Type"] = bold_tag.get_text(strip=True)
+
     # Look for table rows
     for row in soup.find_all("tr"):
         cells = row.find_all("td")
@@ -101,7 +106,6 @@ def parse_html_body(html_text):
             fields[key] = value
 
     return fields
-
 
 def fetch_unread_inbound(service):
     query = "label:INBOX is:unread from:inbound@tbrc.info"
@@ -126,7 +130,8 @@ def fetch_unread_inbound(service):
             "Email ID": email_value,
             "Company Name": fields.get("Company Name", "") if fields.get("Company Name", "").strip() else "--",
             "CountryCode": COUNTRY_MAP.get(fields.get("Country", ""), fields.get("Country", "")),
-            "Phone No": phone_value
+            "Phone No": phone_value,
+            "Request Type": fields.get("Request Type", "")
         }
         structured_list.append(structured)
         
@@ -183,6 +188,7 @@ def push_to_onepagecrm(fields, endpoint_user_id, api_key, owner_id):
         "visibility": "private",
         "owner_id": owner_id,
         "background": fields.get("Report Name", ""),
+        "request_type": fields.get("Request Type", ""),
         "address_list": [
          {
                 "address": "",
